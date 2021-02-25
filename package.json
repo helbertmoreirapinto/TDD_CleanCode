@@ -1,10 +1,11 @@
 {
-  "name": "TDD_CleanCode",
+  "name": "tddcleancode",
   "version": "1.0.0",
   "description": "",
   "main": "test.js",
   "scripts": {
     "test": "jest",
+    "test:staged": "jest",
     "lint": "eslint src --max-warnings=0"
   },
   "repository": {
@@ -32,6 +33,7 @@
     "jest": "^26.6.3",
     "lint-staged": "^9.5.0",
     "ts-jest": "^26.5.2",
+    "ts-node": "^9.1.1",
     "typescript": "^4.2.2"
   },
   "husky": {
@@ -42,6 +44,7 @@
   "lint-staged": {
     "src/**/*": [
       "npx eslint 'src/**' --fix",
+      "npm run test:staged",
       "git add ."
     ]
   }
