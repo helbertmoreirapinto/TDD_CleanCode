@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/helbertmoreirapinto/TDD_CleanCode/issues"
   },
-  "homepage": "https://github.com/helbertmoreirapinto/TDD_CleanCode#readme"
+  "homepage": "https://github.com/helbertmoreirapinto/TDD_CleanCode#readme",
+  "devDependencies": {
+    "git-commit-msg-linter": "^3.0.0"
+  }
 }
