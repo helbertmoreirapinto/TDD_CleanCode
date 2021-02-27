@@ -4,6 +4,7 @@ import { HttpResponse, HttpRequest } from '../protocols/http'
 import { badRequest } from '../helpers/http-helpers'
 import { Controller } from '../protocols/controller'
 import { EmailValidator } from '../protocols/emailValidator'
+import { InternalServerError } from '../errors/internal-server-error'
 
 export class SingUpController implements Controller {
   private readonly emailValidator: EmailValidator
@@ -14,14 +15,21 @@ export class SingUpController implements Controller {
 
   handle (httpRequest: HttpRequest): HttpResponse {
     const requiredFiels = ['name', 'email', 'password', 'passwordConfirmation']
-    for (const field of requiredFiels) {
-      if (!httpRequest.body[field]) {
-        return badRequest(new MissingParamError(field))
+    try {
+      for (const field of requiredFiels) {
+        if (!httpRequest.body[field]) {
+          return badRequest(new MissingParamError(field))
+        }
       }
-    }
-    const isValid = this.emailValidator.isValid(httpRequest.body.email)
-    if (!isValid) {
-      return badRequest(new InvalidParamError('email'))
+      const isValid = this.emailValidator.isValid(httpRequest.body.email)
+      if (!isValid) {
+        return badRequest(new InvalidParamError('email'))
+      }
+    } catch (error) {
+      return {
+        statusCode: 500,
+        body: new InternalServerError()
+      }
     }
 
     return {
