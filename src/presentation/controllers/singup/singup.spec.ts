@@ -1,4 +1,4 @@
-import { EmailValidator, AddAccount, AddAccountModel, AccountModel } from './protocols'
+import { EmailValidator, AddAccount, AddAccountModel, AccountModel } from './singup-protocols'
 import { SingUpController } from './singup'
 import { MissingParamError, InvalidParamError, InternalServerError } from '../../errors/'
 
