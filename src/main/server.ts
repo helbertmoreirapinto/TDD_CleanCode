@@ -1,5 +1,5 @@
-import express from 'express'
+import app from './config/app'
 
-const app = express()
 const port = process.env.PORT || 3333
+
 app.listen(port, () => console.log(`Server running on port http://localhost:${port}`))
