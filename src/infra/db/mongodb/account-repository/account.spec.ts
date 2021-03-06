@@ -7,7 +7,6 @@ const makeSut = (): AccountMongoRepository => {
 
 describe('Account Mongo Repository', () => {
   beforeAll(async () => {
-    console.log('link mongo', process.env.MONGO_URL)
     await MongoHelper.connect(process.env.MONGO_URL)
   })
 
