@@ -9,6 +9,7 @@ module.exports = {
   coverageDirectory: 'coverage',
   coverageProvider: 'babel',
   testEnvironment: 'node',
+  presset: '@shelf/jest-mongodb',
   transform: {
     '.+\\.ts$': 'ts-jest'
   }
