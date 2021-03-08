@@ -12,8 +12,8 @@ describe('Singup Routes', () => {
   })
 
   beforeEach(async () => {
-    const accountCoollection = await MongoHelper.getCollection('accounts')
-    await accountCoollection.deleteMany({})
+    const accountCollection = await MongoHelper.getCollection('accounts')
+    await accountCollection.deleteMany({})
   })
 
   test('Should return an account on success', async () => {
