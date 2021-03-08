@@ -4,8 +4,8 @@ import { Model } from '../../../../domain/models/model'
 export const MongoHelper = {
   client: null as MongoClient,
 
-  async connect (uri: string): Promise<void> {
-    this.client = await MongoClient.connect(process.env.MONGO_URL, {
+  async connect (url: string): Promise<void> {
+    this.client = await MongoClient.connect(url, {
       useNewUrlParser: true,
       useUnifiedTopology: true
     })
