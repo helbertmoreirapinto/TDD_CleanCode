@@ -154,7 +154,7 @@ describe('SingUp Controller', () => {
 
     const httpResponse = await sut.handle(httpResquest)
     expect(httpResponse.statusCode).toBe(500)
-    expect(httpResponse.body).toEqual(new InternalServerError())
+    expect(httpResponse.body).toEqual(new InternalServerError('mock stack'))
   })
 
   test('Should call AddAccount with correct values', async () => {
@@ -195,7 +195,7 @@ describe('SingUp Controller', () => {
 
     const httpResponse = await sut.handle(httpResquest)
     expect(httpResponse.statusCode).toBe(500)
-    expect(httpResponse.body).toEqual(new InternalServerError())
+    expect(httpResponse.body).toEqual(new InternalServerError('mock stack'))
   })
 
   test('Should return 200 if valid data is provided', async () => {

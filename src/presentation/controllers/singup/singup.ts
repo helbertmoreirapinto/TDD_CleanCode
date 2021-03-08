@@ -38,7 +38,7 @@ export class SingUpController implements Controller {
 
       return ok(account)
     } catch (error) {
-      return internalServerError()
+      return internalServerError(error)
     }
   }
 }
