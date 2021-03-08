@@ -17,8 +17,9 @@ export class LoginController implements Controller {
       }
     }
     const { email } = httpRequest.body
-    const emailValid = await this.emailValidator.isValid(email)
-    if (!emailValid) return badRequest(new InvalidParamError('email'))
+    const isValid = await this.emailValidator.isValid(email)
+    if (!isValid) return badRequest(new InvalidParamError('email'))
+
     return await new Promise(resolve => resolve(ok({})))
   }
 }
