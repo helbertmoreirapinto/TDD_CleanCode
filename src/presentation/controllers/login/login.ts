@@ -1,5 +1,5 @@
 import { MissingParamError } from '../../errors'
-import { badRequest } from '../../helpers/http-helpers'
+import { badRequest, ok } from '../../helpers/http-helpers'
 import { Controller, HttpRequest, HttpResponse } from '../../protocols'
 
 export class LoginController implements Controller {
@@ -11,6 +11,6 @@ export class LoginController implements Controller {
       }
     }
 
-    return await new Promise(resolve => resolve(badRequest(new MissingParamError('email'))))
+    return await new Promise(resolve => resolve(ok({})))
   }
 }
