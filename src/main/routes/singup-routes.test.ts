@@ -12,7 +12,7 @@ describe('Singup Routes', () => {
   })
 
   beforeEach(async () => {
-    const accountCoollection = MongoHelper.getCollection('accounts')
+    const accountCoollection = await MongoHelper.getCollection('accounts')
     await accountCoollection.deleteMany({})
   })
 
