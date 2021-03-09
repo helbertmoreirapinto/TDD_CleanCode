@@ -6,7 +6,7 @@ export const badRequest = (error: Error): HttpResponse => ({
   body: error
 })
 
-export const unauthorizedError = (): HttpResponse => ({
+export const unauthorized = (): HttpResponse => ({
   statusCode: 401,
   body: new UnauthorizedError()
 })
