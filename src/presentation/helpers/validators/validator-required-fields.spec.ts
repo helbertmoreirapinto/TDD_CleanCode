@@ -20,4 +20,11 @@ describe('Required Fields Validator', () => {
 
     expect(error).toEqual(new MissingParamError('field'))
   })
+
+  test('Should not return if validation succeeds', async () => {
+    const { sut } = makeSut('field')
+    const error = await sut.validate({ field: 'any_value' })
+
+    expect(error).toBeFalsy()
+  })
 })
