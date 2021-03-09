@@ -9,6 +9,6 @@ export class DbAuthenticator implements Authenticator {
 
   async auth (authData: AuthenticatorModel): Promise<string> {
     await this.loadAccountByEmailRepository.load(authData.email)
-    return await new Promise(resolve => resolve(''))
+    return null
   }
 }
