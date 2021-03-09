@@ -1,6 +1,6 @@
 import { LoginController } from './login'
 import { HttpRequest, EmailValidator, Authenticator } from './login-protocols'
-import { badRequest, internalServerError, unauthorizedError } from '../../helpers/http-helpers'
+import { badRequest, internalServerError, unauthorized, ok } from '../../helpers/http-helpers'
 import { InvalidParamError, MissingParamError } from '../../errors'
 
 interface SutTypes {
@@ -82,9 +82,7 @@ describe('Login Controller', () => {
 
   test('Should return 500 if EmailValidator throws', async () => {
     const { sut, emailValidatorStub } = makeSut()
-    jest.spyOn(emailValidatorStub, 'isValid').mockImplementationOnce(() => {
-      throw new Error()
-    })
+    jest.spyOn(emailValidatorStub, 'isValid').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
 
     const hhtpResponse = await sut.handle(makeFakeRequest())
     expect(hhtpResponse).toEqual(internalServerError(new Error()))
@@ -103,16 +101,23 @@ describe('Login Controller', () => {
     jest.spyOn(authenticatorStub, 'auth').mockReturnValueOnce(new Promise(resolve => resolve(null)))
 
     const hhtpResponse = await sut.handle(makeFakeRequest())
-    expect(hhtpResponse).toEqual(unauthorizedError())
+    expect(hhtpResponse).toEqual(unauthorized())
   })
 
-  test('Should return 500 if Authenticator throws', async () => {
+  test('Should return 200 if Authenticator throws', async () => {
     const { sut, authenticatorStub } = makeSut()
-    jest.spyOn(authenticatorStub, 'auth').mockImplementationOnce(() => {
-      throw new Error()
-    })
+    jest.spyOn(authenticatorStub, 'auth').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
 
     const hhtpResponse = await sut.handle(makeFakeRequest())
     expect(hhtpResponse).toEqual(internalServerError(new Error()))
+  })
+
+  test('Should return 401 if invalid credentials are provided', async () => {
+    const { sut } = makeSut()
+
+    const hhtpResponse = await sut.handle(makeFakeRequest())
+    expect(hhtpResponse).toEqual(ok({
+      accessToken: 'valid_token'
+    }))
   })
 })
