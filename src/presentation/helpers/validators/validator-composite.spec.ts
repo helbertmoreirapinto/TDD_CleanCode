@@ -1,9 +1,9 @@
 import { ValidateComposite, Validator } from '.'
-import { MissingParamError } from '../../errors'
+import { InvalidParamError, MissingParamError } from '../../errors'
 
 interface SutTypes {
   sut: ValidateComposite
-  validatorStub: Validator
+  validatorStubs: Validator[]
 }
 
 const makeValidator = (): Validator => {
@@ -15,20 +15,34 @@ const makeValidator = (): Validator => {
   return new ValidatorStub()
 }
 
-const makeSut = (): SutTypes => {
-  const validatorStub = makeValidator()
-  const sut = new ValidateComposite([validatorStub])
+const makeSut = (numValidators: number): SutTypes => {
+  const validatorStubs = []
+  while (numValidators-- > 0) {
+    validatorStubs.push(makeValidator())
+  }
+  const sut = new ValidateComposite(validatorStubs)
 
   return {
     sut,
-    validatorStub
+    validatorStubs
   }
 }
 
 describe('Composite Validator', () => {
   test('Should return an error if any validation fails', async () => {
-    const { sut, validatorStub } = makeSut()
-    jest.spyOn(validatorStub, 'validate').mockReturnValueOnce(new Promise(resolve => resolve(new MissingParamError('field'))))
+    const { sut, validatorStubs } = makeSut(3)
+    jest.spyOn(validatorStubs[1], 'validate').mockReturnValueOnce(new Promise(resolve => resolve(new MissingParamError('field'))))
+
+    const error = await sut.validate({ field: 'any_value' })
+    expect(error).toEqual(new MissingParamError('field'))
+  })
+
+  test('Should return the first error if more then one validation fails', async () => {
+    const { sut, validatorStubs } = makeSut(3)
+    jest.spyOn(validatorStubs[0], 'validate').mockReturnValueOnce(new Promise(resolve => resolve(new MissingParamError('field'))))
+    jest.spyOn(validatorStubs[1], 'validate').mockReturnValueOnce(new Promise(resolve => resolve(new InvalidParamError('mock stack'))))
+    jest.spyOn(validatorStubs[2], 'validate').mockReturnValueOnce(new Promise(resolve => resolve(new MissingParamError('otherField'))))
+
     const error = await sut.validate({ field: 'any_value' })
     expect(error).toEqual(new MissingParamError('field'))
   })
