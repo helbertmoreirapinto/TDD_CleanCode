@@ -46,4 +46,11 @@ describe('Composite Validator', () => {
     const error = await sut.validate({ field: 'any_value' })
     expect(error).toEqual(new MissingParamError('field'))
   })
+
+  test('Should not return if validation succeeds', async () => {
+    const { sut } = makeSut(3)
+
+    const error = await sut.validate({ field: 'any_value' })
+    expect(error).toBeFalsy()
+  })
 })
