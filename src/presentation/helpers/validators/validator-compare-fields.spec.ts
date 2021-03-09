@@ -13,7 +13,7 @@ const makeSut = (field: string, fieldToCompare: string): SutTypes => {
   }
 }
 
-describe('Required Fields Validator', () => {
+describe('Compare Fields Validator', () => {
   test('Should return an MissingParamError if validation fails', async () => {
     const { sut } = makeSut('field', 'otherField')
     const error = await sut.validate({
