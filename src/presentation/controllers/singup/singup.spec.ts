@@ -1,4 +1,4 @@
-import { EmailValidator, AddAccount, AddAccountModel, AccountModel } from './singup-protocols'
+import { EmailValidator, AddAccount, AddAccountModel, AccountModel, Validator } from './singup-protocols'
 import { SingUpController } from './singup'
 import { MissingParamError, InvalidParamError, InternalServerError } from '../../errors/'
 import { HttpRequest } from '../../protocols'
@@ -8,15 +8,7 @@ interface SutTypes {
   sut: SingUpController
   emailValidatorStub: EmailValidator
   addAccountStub: AddAccount
-}
-
-const makeEmailValidator = (): EmailValidator => {
-  class EmailValidatorStub implements EmailValidator {
-    async isValid (email: string): Promise<boolean> {
-      return true
-    }
-  }
-  return new EmailValidatorStub()
+  validatorStub: Validator
 }
 
 const makeFakeAccount = (): AccountModel => ({
@@ -44,12 +36,35 @@ const makeAccount = (): AddAccount => {
   return new AddAccountStub()
 }
 
+const makeValidatorStub = (): Validator => {
+  class ValidatorStub implements Validator {
+    async validate (data: any): Promise<Error> {
+      return null
+    }
+  }
+  return new ValidatorStub()
+}
+
+const makeEmailValidator = (): EmailValidator => {
+  class EmailValidatorStub implements EmailValidator {
+    async isValid (email: string): Promise<boolean> {
+      return true
+    }
+  }
+  return new EmailValidatorStub()
+}
+
 const makeSut = (): SutTypes => {
   const emailValidatorStub = makeEmailValidator()
   const addAccountStub = makeAccount()
-  const sut = new SingUpController(emailValidatorStub, addAccountStub)
+  const validatorStub = makeValidatorStub()
+  const sut = new SingUpController(emailValidatorStub, addAccountStub, validatorStub)
+
   return {
-    sut, emailValidatorStub, addAccountStub
+    sut,
+    emailValidatorStub,
+    addAccountStub,
+    validatorStub
   }
 }
 
@@ -164,5 +179,14 @@ describe('SingUp Controller', () => {
 
     const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(ok(makeFakeAccount()))
+  })
+
+  test('Should call Validator with correct value', async () => {
+    const { sut, validatorStub } = makeSut()
+    const validateSpy = jest.spyOn(validatorStub, 'validate')
+
+    const httpResquest = makeFakeRequest()
+    await sut.handle(httpResquest)
+    expect(validateSpy).toHaveBeenLastCalledWith(httpResquest.body)
   })
 })
