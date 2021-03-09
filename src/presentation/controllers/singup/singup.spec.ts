@@ -57,6 +57,23 @@ const makeSut = (): SutTypes => {
 }
 
 describe('SingUp Controller', () => {
+  test('Should call Validator with correct value', async () => {
+    const { sut, validatorStub } = makeSut()
+    const validateSpy = jest.spyOn(validatorStub, 'validate')
+
+    const httpResquest = makeFakeRequest()
+    await sut.handle(httpResquest)
+    expect(validateSpy).toHaveBeenLastCalledWith(httpResquest.body)
+  })
+
+  test('Should return 400 if Validator returns an error', async () => {
+    const { sut, validatorStub } = makeSut()
+    jest.spyOn(validatorStub, 'validate').mockReturnValueOnce(new Promise((resolve, reject) => resolve(new MissingParamError('any_field'))))
+
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(badRequest(new MissingParamError('any_field')))
+  })
+
   test('Should call AddAccount with correct values', async () => {
     const { sut, addAccountStub } = makeSut()
     const addSpy = jest.spyOn(addAccountStub, 'add')
@@ -84,22 +101,5 @@ describe('SingUp Controller', () => {
 
     const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(ok(makeFakeAccount()))
-  })
-
-  test('Should call Validator with correct value', async () => {
-    const { sut, validatorStub } = makeSut()
-    const validateSpy = jest.spyOn(validatorStub, 'validate')
-
-    const httpResquest = makeFakeRequest()
-    await sut.handle(httpResquest)
-    expect(validateSpy).toHaveBeenLastCalledWith(httpResquest.body)
-  })
-
-  test('Should return 400 if Validator returns an error', async () => {
-    const { sut, validatorStub } = makeSut()
-    jest.spyOn(validatorStub, 'validate').mockReturnValueOnce(new Promise((resolve, reject) => resolve(new MissingParamError('any_field'))))
-
-    const httpResponse = await sut.handle(makeFakeRequest())
-    expect(httpResponse).toEqual(badRequest(new MissingParamError('any_field')))
   })
 })

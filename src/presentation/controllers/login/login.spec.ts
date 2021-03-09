@@ -2,11 +2,13 @@ import { LoginController } from './login'
 import { HttpRequest, EmailValidator, Authenticator } from './login-protocols'
 import { badRequest, internalServerError, unauthorized, ok } from '../../helpers/http-helpers'
 import { InvalidParamError, MissingParamError } from '../../errors'
+import { Validator } from '../../protocols'
 
 interface SutTypes {
   sut: LoginController
   emailValidatorStub: EmailValidator
   authenticatorStub: Authenticator
+  validatorStub: Validator
 }
 
 const makeFakeRequest = (): HttpRequest => ({
@@ -35,19 +37,47 @@ const makeAuthenticator = (): Authenticator => {
   return new AuthenticatorStub()
 }
 
+const makeValidator = (): Validator => {
+  class ValidatorStub implements Validator {
+    async validate (input: string): Promise<Error> {
+      return null
+    }
+  }
+  return new ValidatorStub()
+}
+
 const makeSut = (): SutTypes => {
   const emailValidatorStub = makeEmailValidator()
   const authenticatorStub = makeAuthenticator()
-  const sut = new LoginController(emailValidatorStub, authenticatorStub)
+  const validatorStub = makeValidator()
+  const sut = new LoginController(emailValidatorStub, authenticatorStub, validatorStub)
 
   return {
     sut,
     emailValidatorStub,
-    authenticatorStub
+    authenticatorStub,
+    validatorStub
   }
 }
 
 describe('Login Controller', () => {
+  test('Should call Validator with correct value', async () => {
+    const { sut, validatorStub } = makeSut()
+    const validateSpy = jest.spyOn(validatorStub, 'validate')
+
+    const httpResquest = makeFakeRequest()
+    await sut.handle(httpResquest)
+    expect(validateSpy).toHaveBeenLastCalledWith(httpResquest.body)
+  })
+
+  test('Should return 400 if Validator returns an error', async () => {
+    const { sut, validatorStub } = makeSut()
+    jest.spyOn(validatorStub, 'validate').mockReturnValueOnce(new Promise((resolve, reject) => resolve(new MissingParamError('any_field'))))
+
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(badRequest(new MissingParamError('any_field')))
+  })
+
   test('Should return 400 if no email is provided', async () => {
     const { sut } = makeSut()
     const httpRequest: HttpRequest = {
