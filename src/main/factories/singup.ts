@@ -1,6 +1,5 @@
 import { Controller } from '../../presentation/controllers/singup/singup-protocols'
 import { SingUpController } from '../../presentation/controllers/singup/singup'
-import { EmailValidatorAdapter } from '../../utils/email-validator-adapter'
 import { DbAddAccount } from '../../data/usecases/add-account/db-add-account'
 import { AccountMongoRepository } from '../../infra/db/mongodb/account-repository/account'
 import { LogMongoRepository } from '../../infra/db/mongodb/log-repository/log'
@@ -15,11 +14,9 @@ export const makeSingupController = (): Controller => {
 
   const dbAddAccount = new DbAddAccount(bCryptAdapter, accountMongoRepository)
 
-  const emailValidatorAdapter = new EmailValidatorAdapter()
-
   const validator = makeSingupValidator()
 
-  const singupController = new SingUpController(emailValidatorAdapter, dbAddAccount, validator)
+  const singupController = new SingUpController(dbAddAccount, validator)
 
   const logMongoRepository = new LogMongoRepository()
   return new LogControllerDecorator(singupController, logMongoRepository)
