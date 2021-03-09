@@ -71,7 +71,6 @@ describe('DbAuthenticator UseCase', () => {
     const { sut, loadAccountByEmailRepositoryStub } = makeSut()
     const loadSpy = jest.spyOn(loadAccountByEmailRepositoryStub, 'load')
     await sut.auth(makeFakeAuthenticator())
-
     expect(loadSpy).toHaveBeenCalledWith('any_email@email.com')
   })
 
@@ -92,7 +91,6 @@ describe('DbAuthenticator UseCase', () => {
   test('Should call HashComparer with correct values', async () => {
     const { sut, hashCompareStub } = makeSut()
     const compareSpy = jest.spyOn(hashCompareStub, 'compare')
-
     await sut.auth(makeFakeAuthenticator())
     expect(compareSpy).toHaveBeenCalledWith('any_password', 'hashed_password')
   })
@@ -114,7 +112,6 @@ describe('DbAuthenticator UseCase', () => {
   test('Should call TokenGenerator with correct id', async () => {
     const { sut, tokenGeneratorStub } = makeSut()
     const compareSpy = jest.spyOn(tokenGeneratorStub, 'generate')
-
     await sut.auth(makeFakeAuthenticator())
     expect(compareSpy).toHaveBeenCalledWith('any_id')
   })
@@ -124,5 +121,11 @@ describe('DbAuthenticator UseCase', () => {
     jest.spyOn(tokenGeneratorStub, 'generate').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
     const promise = sut.auth(makeFakeAuthenticator())
     await expect(promise).rejects.toThrow()
+  })
+
+  test('Should throw if TokenGenerator throws', async () => {
+    const { sut } = makeSut()
+    const accessToken = await sut.auth(makeFakeAuthenticator())
+    expect(accessToken).toBe('any_token')
   })
 })
