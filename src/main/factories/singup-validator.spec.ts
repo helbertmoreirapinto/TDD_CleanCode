@@ -1,4 +1,4 @@
-import { ValidateComposite, RequiredFields } from '../../presentation/helpers/validators'
+import { ValidateComposite, RequiredFields, CompareFields } from '../../presentation/helpers/validators'
 import { Validator } from '../../presentation/protocols'
 import { makeSingupValidator } from './singup-validator'
 
@@ -13,7 +13,7 @@ describe('SingupValidator Factory', () => {
     for (const field of ['name', 'email', 'password', 'passwordConfirmation']) {
       validators.push(new RequiredFields(field))
     }
-
+    validators.push(new CompareFields('password', 'passwordConfirmation'))
     expect(ValidateComposite).toHaveBeenCalledWith(validators)
   })
 })

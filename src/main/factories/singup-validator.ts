@@ -1,4 +1,4 @@
-import { ValidateComposite, RequiredFields } from '../../presentation/helpers/validators'
+import { ValidateComposite, RequiredFields, CompareFields } from '../../presentation/helpers/validators'
 import { Validator } from '../../presentation/protocols'
 
 export const makeSingupValidator = (): ValidateComposite => {
@@ -6,5 +6,7 @@ export const makeSingupValidator = (): ValidateComposite => {
   for (const field of ['name', 'email', 'password', 'passwordConfirmation']) {
     validators.push(new RequiredFields(field))
   }
+  validators.push(new CompareFields('password', 'passwordConfirmation'))
+
   return new ValidateComposite(validators)
 }
