@@ -1,6 +1,6 @@
 import { SingUpController } from './singup'
 import { HttpRequest, AddAccount, AddAccountModel, AccountModel, Validator } from './singup-protocols'
-import { badRequest, internalServerError, ok } from '../../helpers/http-helpers'
+import { badRequest, internalServerError, ok } from '../../helpers/http/http-helpers'
 import { MissingParamError, InternalServerError } from '../../errors/'
 
 interface SutTypes {

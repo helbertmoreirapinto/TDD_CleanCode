@@ -1,6 +1,6 @@
 import { LoginController } from './login'
 import { HttpRequest, EmailValidator, Authenticator, Validator } from './login-protocols'
-import { badRequest, internalServerError, unauthorized, ok } from '../../helpers/http-helpers'
+import { badRequest, internalServerError, unauthorized, ok } from '../../helpers/http/http-helpers'
 import { MissingParamError } from '../../errors'
 
 interface SutTypes {
