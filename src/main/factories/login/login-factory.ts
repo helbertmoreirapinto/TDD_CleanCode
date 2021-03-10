@@ -1,13 +1,13 @@
-import { Controller } from '../../../presentation/controllers/login/login-protocols'
-import { LoginController } from '../../../presentation/controllers/login/login'
-import { LogMongoRepository } from '../../../infra/db/mongodb/log-repository/log'
-import { LogControllerDecorator } from '../../decorators/log'
-import { makeLoginValidator } from './login-validator'
+import { Controller } from '../../../presentation/controllers/login/login-controller-protocols'
+import { LoginController } from '../../../presentation/controllers/login/login-controller'
+import { LogMongoRepository } from '../../../infra/db/mongodb/log/log-mongo-repository'
+import { LogControllerDecorator } from '../../decorators/log-controller-decorator'
+import { makeLoginValidator } from './login-validator-factory'
 import { EmailValidatorAdapter } from '../../../utils/email-validator-adapter'
 import { DbAuthenticator } from '../../../data/usecases/authenticator/db-authenticator'
 import { BCryptAdapter } from '../../../infra/criptography/bcrypt-adapter/bcrypt-adapter'
 import { JwtAdapter } from '../../../infra/criptography/jwt-adapter/jwt-adater'
-import { AccountMongoRepository } from '../../../infra/db/mongodb/account-repository/account'
+import { AccountMongoRepository } from '../../../infra/db/mongodb/account/account-mongo-repository'
 
 export const makeLoginController = (): Controller => {
   const salt = +process.env.SALT || 12

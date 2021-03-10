@@ -1,7 +1,7 @@
-import { SingUpController } from './singup'
-import { HttpRequest, AddAccount, AddAccountModel, AccountModel, Validator } from './singup-protocols'
+import { SingUpController } from './singup-controller'
+import { HttpRequest, AddAccount, AddAccountModel, AccountModel, Validator } from './singup-controller-protocols'
 import { badRequest, internalServerError, ok } from '../../helpers/http/http-helpers'
-import { MissingParamError, InternalServerError } from '../../errors/'
+import { MissingParamError, InternalServerError } from '../../errors'
 
 interface SutTypes {
   sut: SingUpController

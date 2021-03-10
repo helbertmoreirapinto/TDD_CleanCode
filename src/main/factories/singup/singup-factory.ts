@@ -1,11 +1,11 @@
-import { Controller } from '../../../presentation/controllers/singup/singup-protocols'
-import { SingUpController } from '../../../presentation/controllers/singup/singup'
+import { Controller } from '../../../presentation/controllers/singup/singup-controller-protocols'
+import { SingUpController } from '../../../presentation/controllers/singup/singup-controller'
 import { DbAddAccount } from '../../../data/usecases/add-account/db-add-account'
-import { AccountMongoRepository } from '../../../infra/db/mongodb/account-repository/account'
-import { LogMongoRepository } from '../../../infra/db/mongodb/log-repository/log'
+import { AccountMongoRepository } from '../../../infra/db/mongodb/account/account-mongo-repository'
+import { LogMongoRepository } from '../../../infra/db/mongodb/log/log-mongo-repository'
 import { BCryptAdapter } from '../../../infra/criptography/bcrypt-adapter/bcrypt-adapter'
-import { LogControllerDecorator } from '../../decorators/log'
-import { makeSingupValidator } from './singup-validator'
+import { LogControllerDecorator } from '../../decorators/log-controller-decorator'
+import { makeSingupValidator } from './singup-validator-factory'
 
 export const makeSingupController = (): Controller => {
   const salt = +process.env.SALT || 12
