@@ -1,7 +1,8 @@
 import bcrypt from 'bcrypt'
 import { BCryptAdapter } from './bcrypt-adapter'
+import env from '../../../main/config/env'
 
-const salt = 12
+const salt = env.salt
 
 jest.mock('bcrypt', () => ({
   async hash (value: string): Promise<string> {

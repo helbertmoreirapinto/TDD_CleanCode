@@ -6,9 +6,10 @@ import { LogMongoRepository } from '../../../infra/db/mongodb/log/log-mongo-repo
 import { BCryptAdapter } from '../../../infra/criptography/bcrypt-adapter/bcrypt-adapter'
 import { LogControllerDecorator } from '../../decorators/log-controller-decorator'
 import { makeSingupValidator } from './singup-validator-factory'
+import env from '../../config/env'
 
 export const makeSingupController = (): Controller => {
-  const salt = +process.env.SALT || 12
+  const salt = env.salt
   const bCryptAdapter = new BCryptAdapter(salt)
   const accountMongoRepository = new AccountMongoRepository()
 
