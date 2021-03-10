@@ -3,11 +3,11 @@ import { JwtAdapter } from './jwt-adater'
 
 const secretKey = 'secret'
 
-// jest.mock('jwt', () => ({
-//   async sign (value: string): Promise<string> {
-//     return await new Promise(resolve => resolve('any_token'))
-//   }
-// }))
+jest.mock('jsonwebtoken', () => ({
+  async sign (value: string): Promise<string> {
+    return await new Promise(resolve => resolve('any_token'))
+  }
+}))
 
 interface SutTypes{
   sut: JwtAdapter
@@ -26,5 +26,11 @@ describe('Jwt Adapter', () => {
     const signSpy = jest.spyOn(jwt, 'sign')
     await sut.encrypt('any_id')
     expect(signSpy).toHaveBeenCalledWith({ id: 'any_id' }, secretKey)
+  })
+
+  test('Should return access token on sign success', async () => {
+    const { sut } = makeSut()
+    const accessToken = await sut.encrypt('any_id')
+    expect(accessToken).toBe('any_token')
   })
 })
