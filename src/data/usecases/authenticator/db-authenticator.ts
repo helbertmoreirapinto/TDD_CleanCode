@@ -1,20 +1,20 @@
-import { Authenticator, AuthenticatorModel, LoadAccountByEmailRepository, HashComparer, TokenGenerator, UpdateAccessTokenRepository } from './db-authenticator-protocols'
+import { Authenticator, AuthenticatorModel, LoadAccountByEmailRepository, HashComparer, Encrypter, UpdateAccessTokenRepository } from './db-authenticator-protocols'
 
 export class DbAuthenticator implements Authenticator {
   private readonly loadAccountByEmailRepository: LoadAccountByEmailRepository
   private readonly hashComparer: HashComparer
-  private readonly tokenGenerator: TokenGenerator
+  private readonly encrypter: Encrypter
   private readonly updateAccessTokenRepository: UpdateAccessTokenRepository
 
   constructor (
     loadAccountByEmailRepository: LoadAccountByEmailRepository,
     hashComparer: HashComparer,
-    tokenGenerator: TokenGenerator,
+    encrypter: Encrypter,
     updateAccessTokenRepository: UpdateAccessTokenRepository
   ) {
     this.loadAccountByEmailRepository = loadAccountByEmailRepository
     this.hashComparer = hashComparer
-    this.tokenGenerator = tokenGenerator
+    this.encrypter = encrypter
     this.updateAccessTokenRepository = updateAccessTokenRepository
   }
 
@@ -23,7 +23,7 @@ export class DbAuthenticator implements Authenticator {
     if (account) {
       const compare = await this.hashComparer.compare(authData.password, account.password)
       if (compare) {
-        const token = await this.tokenGenerator.generate(account.id)
+        const token = await this.encrypter.encrypt(account.id)
         await this.updateAccessTokenRepository.update(account.id, token)
         return token
       }
