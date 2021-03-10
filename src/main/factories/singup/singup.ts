@@ -3,7 +3,7 @@ import { SingUpController } from '../../../presentation/controllers/singup/singu
 import { DbAddAccount } from '../../../data/usecases/add-account/db-add-account'
 import { AccountMongoRepository } from '../../../infra/db/mongodb/account-repository/account'
 import { LogMongoRepository } from '../../../infra/db/mongodb/log-repository/log'
-import { BCryptAdapter } from '../../../infra/criptography/bcrypt-adapter'
+import { BCryptAdapter } from '../../../infra/criptography/bcrypt-adapter/bcrypt-adapter'
 import { LogControllerDecorator } from '../../decorators/log'
 import { makeSingupValidator } from './singup-validator'
 
