@@ -37,15 +37,13 @@ describe('Login Routes', () => {
   })
 
   describe('POST /login', () => {
-    test('Should return 200 on login', async () => {
+    test('Should return 200 on login if success', async () => {
       const password = await hash('any_password', env.salt)
-
       await accountCollection.insertOne({
         name: 'any_name',
         email: 'any_email@email.com',
         password
       })
-
       await request(app)
         .post('/api/login')
         .send({
@@ -53,6 +51,16 @@ describe('Login Routes', () => {
           password: 'any_password'
         })
         .expect(200)
+    })
+
+    test('Should return 401 on login if fails', async () => {
+      await request(app)
+        .post('/api/login')
+        .send({
+          email: 'any_email@email.com',
+          password: 'any_password'
+        })
+        .expect(401)
     })
   })
 })
