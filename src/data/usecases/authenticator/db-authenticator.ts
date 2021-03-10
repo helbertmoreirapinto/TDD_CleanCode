@@ -7,9 +7,9 @@ export class DbAuthenticator implements Authenticator {
   private readonly updateAccessTokenRepository: UpdateAccessTokenRepository
 
   constructor (
-    loadAccountByEmailRepository: LoadAccountByEmailRepository,
     hashComparer: HashComparer,
     encrypter: Encrypter,
+    loadAccountByEmailRepository: LoadAccountByEmailRepository,
     updateAccessTokenRepository: UpdateAccessTokenRepository
   ) {
     this.loadAccountByEmailRepository = loadAccountByEmailRepository

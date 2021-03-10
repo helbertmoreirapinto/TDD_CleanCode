@@ -7,6 +7,7 @@ import { EmailValidatorAdapter } from '../../../utils/email-validator-adapter'
 import { DbAuthenticator } from '../../../data/usecases/authenticator/db-authenticator'
 import { BCryptAdapter } from '../../../infra/criptography/bcrypt-adapter/bcrypt-adapter'
 import { JwtAdapter } from '../../../infra/criptography/jwt-adapter/jwt-adater'
+import { AccountMongoRepository } from '../../../infra/db/mongodb/account-repository/account'
 
 export const makeLoginController = (): Controller => {
   const salt = +process.env.SALT || 12
@@ -15,7 +16,9 @@ export const makeLoginController = (): Controller => {
   const secretKey = process.env.SECRET_KEY || 'new_secret_key'
   const jwtAdapter = new JwtAdapter(secretKey)
 
-  const dbAuthenticator = new DbAuthenticator(null, bCryptAdapter, jwtAdapter, null)
+  const accountMongoRepository = new AccountMongoRepository()
+
+  const dbAuthenticator = new DbAuthenticator(bCryptAdapter, jwtAdapter, accountMongoRepository, accountMongoRepository)
 
   const emailValidator = new EmailValidatorAdapter()
   const validator = makeLoginValidator()

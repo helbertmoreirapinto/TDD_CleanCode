@@ -64,9 +64,9 @@ const makeSut = (): SutTypes => {
   const encrypterStub = makeEncrypter()
   const updateAccessTokenRepositoryStub = makeUpdateAccessTokenRepository()
   const sut = new DbAuthenticator(
-    loadAccountByEmailRepositoryStub,
     hashCompareStub,
     encrypterStub,
+    loadAccountByEmailRepositoryStub,
     updateAccessTokenRepositoryStub
   )
 
