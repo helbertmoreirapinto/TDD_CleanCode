@@ -3,15 +3,11 @@ import { badRequest, internalServerError, ok, unauthorized } from '../../helpers
 import { InvalidParamError } from '../../errors'
 
 export class LoginController implements Controller {
-  private readonly emailValidator: EmailValidator
-  private readonly authenticator: Authenticator
-  private readonly validator: Validator
-
-  constructor (emailValidator: EmailValidator, authenticator: Authenticator, validator: Validator) {
-    this.emailValidator = emailValidator
-    this.authenticator = authenticator
-    this.validator = validator
-  }
+  constructor (
+    private readonly emailValidator: EmailValidator,
+    private readonly authenticator: Authenticator,
+    private readonly validator: Validator
+  ) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
