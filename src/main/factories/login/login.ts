@@ -4,12 +4,14 @@ import { LogMongoRepository } from '../../../infra/db/mongodb/log-repository/log
 import { LogControllerDecorator } from '../../decorators/log'
 import { makeLoginValidator } from './login-validator'
 import { EmailValidatorAdapter } from '../../../utils/email-validator-adapter'
+import { DbAuthenticator } from '../../../data/usecases/authenticator/db-authenticator'
 
 export const makeLoginController = (): Controller => {
+  const dbAuthenticator = new DbAuthenticator(null, null, null, null)
   const validator = makeLoginValidator()
   const emailValidator = new EmailValidatorAdapter()
-  const singupController = new LoginController(emailValidator, null, validator)
+  const loginController = new LoginController(emailValidator, dbAuthenticator, validator)
 
   const logMongoRepository = new LogMongoRepository()
-  return new LogControllerDecorator(singupController, logMongoRepository)
+  return new LogControllerDecorator(loginController, logMongoRepository)
 }
