@@ -8,7 +8,7 @@ import { LogControllerDecorator } from '../../decorators/log'
 import { makeSingupValidator } from './singup-validator'
 
 export const makeSingupController = (): Controller => {
-  const salt = 12
+  const salt = +process.env.SALT || 12
   const bCryptAdapter = new BCryptAdapter(salt)
   const accountMongoRepository = new AccountMongoRepository()
 
