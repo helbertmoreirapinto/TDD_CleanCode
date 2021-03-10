@@ -37,6 +37,44 @@ describe('Login Routes', () => {
   })
 
   describe('POST /login', () => {
+    test('Should return 400 on login if email is not provided', async () => {
+      await request(app)
+        .post('/api/login')
+        .send({
+          password: 'any_password'
+        })
+        .expect(400)
+    })
+
+    test('Should return 400 on login if password is not provided', async () => {
+      await request(app)
+        .post('/api/login')
+        .send({
+          email: 'any_email@email.com'
+        })
+        .expect(400)
+    })
+
+    test('Should return 400 on login if email is invalid', async () => {
+      await request(app)
+        .post('/api/login')
+        .send({
+          email: 'any_email',
+          password: 'any_password'
+        })
+        .expect(400)
+    })
+
+    test('Should return 401 on login if fails', async () => {
+      await request(app)
+        .post('/api/login')
+        .send({
+          email: 'any_email@email.com',
+          password: 'any_password'
+        })
+        .expect(401)
+    })
+
     test('Should return 200 on login if success', async () => {
       const password = await hash('any_password', env.salt)
       await accountCollection.insertOne({
@@ -51,16 +89,6 @@ describe('Login Routes', () => {
           password: 'any_password'
         })
         .expect(200)
-    })
-
-    test('Should return 401 on login if fails', async () => {
-      await request(app)
-        .post('/api/login')
-        .send({
-          email: 'any_email@email.com',
-          password: 'any_password'
-        })
-        .expect(401)
     })
   })
 })
