@@ -107,13 +107,6 @@ describe('SingUp Controller', () => {
     expect(httpResponse).toEqual(internalServerError(new InternalServerError('mock stack')))
   })
 
-  test('Should return 200 if valid data is provided', async () => {
-    const { sut } = makeSut()
-
-    const httpResponse = await sut.handle(makeFakeRequest())
-    expect(httpResponse).toEqual(ok(makeFakeAccount()))
-  })
-
   test('Should call Authenticator with correct values', async () => {
     const { sut, authenticatorStub } = makeSut()
     const authSpy = jest.spyOn(authenticatorStub, 'auth')
@@ -131,5 +124,12 @@ describe('SingUp Controller', () => {
 
     const hhtpResponse = await sut.handle(makeFakeRequest())
     expect(hhtpResponse).toEqual(internalServerError(new Error()))
+  })
+
+  test('Should return 200 if valid data is provided', async () => {
+    const { sut } = makeSut()
+
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(ok({ acessToken: 'any_token' }))
   })
 })
