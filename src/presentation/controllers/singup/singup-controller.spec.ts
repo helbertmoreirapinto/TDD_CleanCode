@@ -1,5 +1,5 @@
 import { SingUpController } from './singup-controller'
-import { HttpRequest, AddAccount, AddAccountModel, AccountModel, Validator } from './singup-controller-protocols'
+import { HttpRequest, AddAccount, AddAccountModel, AccountModel, Validator, Authenticator, AuthenticatorModel } from './singup-controller-protocols'
 import { badRequest, internalServerError, ok } from '../../helpers/http/http-helpers'
 import { MissingParamError, InternalServerError } from '../../errors'
 
@@ -7,6 +7,7 @@ interface SutTypes {
   sut: SingUpController
   addAccountStub: AddAccount
   validatorStub: Validator
+  authenticatorStub: Authenticator
 }
 
 const makeFakeAccount = (): AccountModel => ({
@@ -43,15 +44,26 @@ const makeValidatorStub = (): Validator => {
   return new ValidatorStub()
 }
 
+const makeAuthenticator = (): Authenticator => {
+  class AuthenticatorStub implements Authenticator {
+    async auth (authData: AuthenticatorModel): Promise<string> {
+      return await new Promise(resolve => resolve('any_token'))
+    }
+  }
+  return new AuthenticatorStub()
+}
+
 const makeSut = (): SutTypes => {
   const addAccountStub = makeAccount()
   const validatorStub = makeValidatorStub()
-  const sut = new SingUpController(addAccountStub, validatorStub)
+  const authenticatorStub = makeAuthenticator()
+  const sut = new SingUpController(addAccountStub, validatorStub, authenticatorStub)
 
   return {
     sut,
     addAccountStub,
-    validatorStub
+    validatorStub,
+    authenticatorStub
   }
 }
 
@@ -100,5 +112,16 @@ describe('SingUp Controller', () => {
 
     const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(ok(makeFakeAccount()))
+  })
+
+  test('Should call Authenticator with correct values', async () => {
+    const { sut, authenticatorStub } = makeSut()
+    const authSpy = jest.spyOn(authenticatorStub, 'auth')
+
+    await sut.handle(makeFakeRequest())
+    expect(authSpy).toHaveBeenLastCalledWith({
+      email: 'any_email@email.com',
+      password: 'any_password'
+    })
   })
 })
