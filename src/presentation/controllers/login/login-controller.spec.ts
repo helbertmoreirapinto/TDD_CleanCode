@@ -49,7 +49,7 @@ const makeSut = (): SutTypes => {
   const emailValidatorStub = makeEmailValidator()
   const authenticatorStub = makeAuthenticator()
   const validatorStub = makeValidator()
-  const sut = new LoginController(emailValidatorStub, authenticatorStub, validatorStub)
+  const sut = new LoginController(authenticatorStub, validatorStub)
 
   return {
     sut,
