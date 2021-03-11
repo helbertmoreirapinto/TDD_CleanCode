@@ -16,7 +16,7 @@ export const makeSingupController = (): Controller => {
 
   const accountMongoRepository = new AccountMongoRepository()
 
-  const dbAddAccount = new DbAddAccount(bCryptAdapter, accountMongoRepository)
+  const dbAddAccount = new DbAddAccount(bCryptAdapter, accountMongoRepository, accountMongoRepository)
 
   const validator = makeSingupValidator()
 
