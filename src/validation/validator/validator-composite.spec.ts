@@ -1,5 +1,5 @@
-import { ValidateComposite, Validator } from '.'
-import { InvalidParamError, MissingParamError } from '../../errors'
+import { InvalidParamError, MissingParamError, Validator } from './validator-protocols'
+import { ValidateComposite } from '.'
 
 interface SutTypes {
   sut: ValidateComposite
