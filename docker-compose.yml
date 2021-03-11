@@ -10,8 +10,8 @@ services:
       - "27017:27017"
   api:
     container_name: api_container
-    build: .
-    image: clean-node-api
+    image: node:14
+    working_dir: /usr/workspace/clean-node-api
     restart: always
     volumes: 
       - ./dist:/usr/workspace/clean-node-api/dist
@@ -21,4 +21,4 @@ services:
       - "9222:9222"
     links:
       - mongo
-    command: npm run debug
+    command: bash -c "npm install --only=prod && npm run debug"
