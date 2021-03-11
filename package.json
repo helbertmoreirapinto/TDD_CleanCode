@@ -75,7 +75,7 @@
     "validator": "^13.5.2"
   },
   "engines": {
-    "node":"14.x"
+    "node": "14.x"
   },
   "config": {
     "mongodbMemoryServer": {
