@@ -1,5 +1,5 @@
-import { makeLoginValidator } from './login-validator-factory'
 import env from '../../config/env'
+import { makeLoginValidator } from './login-validator-factory'
 import { LogControllerDecorator } from '../../decorators/log-controller-decorator'
 import { EmailValidatorAdapter } from '../../adapters/validators/email-validator-adapter'
 import { Controller } from '../../../presentation/controllers/login/login-controller-protocols'
