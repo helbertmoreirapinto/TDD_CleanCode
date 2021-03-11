@@ -14,9 +14,10 @@ export class SingUpController implements Controller {
       if (error) return badRequest(error)
 
       const { name, email, password } = httpRequest.body
-      const account = await this.addAccount.add({ name, email, password })
-      await this.authenticator.auth({ email, password })
-      return ok(account)
+      await this.addAccount.add({ name, email, password })
+
+      const acessToken = await this.authenticator.auth({ email, password })
+      return ok({ acessToken })
     } catch (error) {
       return internalServerError(error)
     }
