@@ -1,6 +1,6 @@
 import { AddSurveyController } from './add-survey-controller'
 import { HttpRequest, Validator, AddSurvey, AddSurveyModel } from './add-survey-controller-protocols'
-import { badRequest, internalServerError } from '../../../helpers/http/http-helpers'
+import { badRequest, internalServerError, noContent } from '../../../helpers/http/http-helpers'
 import { MissingParamError } from '../../../errors'
 
 interface SutTypes{
@@ -58,7 +58,7 @@ describe('Add Survey Controller', () => {
     expect(validatorSpy).toHaveBeenCalledWith(httpRequest.body)
   })
 
-  test('Should return 400 if Validator returns an error', async () => {
+  test('Should return 400 if Validator throws', async () => {
     const { sut, validatorStub } = makeSut()
     jest.spyOn(validatorStub, 'validate').mockReturnValueOnce(new Promise(resolve => resolve(new MissingParamError('any_field'))))
     const httpResponse = await sut.handle(makeFakeRequest())
@@ -73,10 +73,16 @@ describe('Add Survey Controller', () => {
     expect(addSpy).toHaveBeenCalledWith(httpRequest.body)
   })
 
-  test('Should return 500 if AddSurvey returns an error', async () => {
+  test('Should return 500 if AddSurvey throws', async () => {
     const { sut, addSurveyStub } = makeSut()
     jest.spyOn(addSurveyStub, 'add').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
     const hhtpResponse = await sut.handle(makeFakeRequest())
     expect(hhtpResponse).toEqual(internalServerError(new Error()))
+  })
+
+  test('Should return 204 if success', async () => {
+    const { sut } = makeSut()
+    const hhtpResponse = await sut.handle(makeFakeRequest())
+    expect(hhtpResponse).toEqual(noContent())
   })
 })
