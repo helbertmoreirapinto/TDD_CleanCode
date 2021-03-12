@@ -26,10 +26,17 @@ const makeSut = (): SutTypes => {
 }
 
 describe('DbLoadAccountByToken Usecase', () => {
-  test('Should call decrypter with correct values', async () => {
+  test('Should call Decrypter with correct values', async () => {
     const { sut, decryperStub } = makeSut()
     const decryptSpy = jest.spyOn(decryperStub, 'decrypt')
     await sut.loadByToken('any_token')
     expect(decryptSpy).toBeCalledWith('any_token')
+  })
+
+  test('Should thorw if Decrypter throws', async () => {
+    const { sut, decryperStub } = makeSut()
+    jest.spyOn(decryperStub, 'decrypt').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+    const promise = sut.loadByToken('any_token')
+    await expect(promise).rejects.toThrow()
   })
 })
