@@ -1,6 +1,6 @@
 import { AddSurveyController } from './add-survey-controller'
 import { HttpRequest, Validator, AddSurvey, AddSurveyModel, SurveyModel } from './add-survey-controller-protocols'
-import { badRequest } from '../../../helpers/http/http-helpers'
+import { badRequest, internalServerError } from '../../../helpers/http/http-helpers'
 import { MissingParamError } from '../../../errors'
 
 interface SutTypes{
@@ -37,7 +37,7 @@ const makeValidatorStub = (): Validator => {
   return new ValidatorStub()
 }
 
-const makeAddSurveyStub = (): any => {
+const makeAddSurveyStub = (): AddSurvey => {
   class AddSurveyStub implements AddSurvey {
     async add (survey: AddSurveyModel): Promise<SurveyModel> {
       return await new Promise(resolve => resolve(makeFakeSurvey()))
@@ -80,5 +80,12 @@ describe('Add Survey Controller', () => {
     const httpRequest: HttpRequest = makeFakeRequest()
     await sut.handle(httpRequest)
     expect(addSpy).toHaveBeenCalledWith(httpRequest.body)
+  })
+
+  test('Should return 500 if AddSurvey returns an error', async () => {
+    const { sut, addSurveyStub } = makeSut()
+    jest.spyOn(addSurveyStub, 'add').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+    const hhtpResponse = await sut.handle(makeFakeRequest())
+    expect(hhtpResponse).toEqual(internalServerError(new Error()))
   })
 })
