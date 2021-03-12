@@ -11,7 +11,7 @@ const makeFakeAddSurvey = (): AddSurveyModel => ({
   question: 'any_question',
   answers: [
     { answer: 'any_answer', image: 'any_image' },
-    { answer: 'other_answer', image: 'other_image' }
+    { answer: 'other_answer' }
   ]
 })
 const makeSut = (): SutTypes => {
@@ -32,13 +32,16 @@ describe('Survey Mongo Repository', () => {
   })
 
   beforeEach(async () => {
-    surveyCollection = await MongoHelper.getCollection('survey')
+    surveyCollection = await MongoHelper.getCollection('surveys')
     await surveyCollection.deleteMany({ })
   })
 
   test('Should return null on add success', async () => {
     const { sut } = makeSut()
-    const account = await sut.add(makeFakeAddSurvey())
-    expect(account).toBeFalsy()
+    const returnSurvey = await sut.add(makeFakeAddSurvey())
+    expect(returnSurvey).toBeFalsy()
+
+    const survey = await surveyCollection.findOne({ question: 'any_question' })
+    expect(survey).toBeTruthy()
   })
 })

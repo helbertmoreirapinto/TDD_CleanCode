@@ -1,7 +1,7 @@
 import { Model } from './model'
 
 export interface SurveyAnswerModel{
-  image: string
+  image?: string
   answer: string
 }
 
