@@ -9,6 +9,6 @@ export class TypeArrayField implements Validator {
   async validate (input: any): Promise<Error> {
     const field = input[this.fieldName]
     if (!field) return new MissingParamError(this.fieldName)
-    if (!field.length) return new InvalidParamError(this.fieldName)
+    if (!Array.isArray(field) || !field.length) return new InvalidParamError(this.fieldName)
   }
 }
