@@ -10,8 +10,11 @@ export class DbLoadAccountByToken implements LoadAccountByToken {
   ) {}
 
   async loadByToken (token: string, role?: string): Promise<AccountModel> {
-    const value = await this.decryper.decrypt(token)
-    await this.loadAccountByTokenRepository.loadByToken(value, role)
-    return await new Promise(resolve => resolve(null))
+    const decryptedToken = await this.decryper.decrypt(token)
+    if (decryptedToken) {
+      const account = await this.loadAccountByTokenRepository.loadByToken(decryptedToken, role)
+      if (account) return account
+    }
+    return null
   }
 }
