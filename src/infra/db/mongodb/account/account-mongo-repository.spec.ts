@@ -21,7 +21,7 @@ const makeSut = (): SutTypes => {
   }
 }
 
-let accountCoollection: Collection
+let accountCollection: Collection
 
 describe('Account Mongo Repository', () => {
   beforeAll(async () => {
@@ -33,8 +33,8 @@ describe('Account Mongo Repository', () => {
   })
 
   beforeEach(async () => {
-    accountCoollection = await MongoHelper.getCollection('accounts')
-    await accountCoollection.deleteMany({ })
+    accountCollection = await MongoHelper.getCollection('accounts')
+    await accountCollection.deleteMany({ })
   })
 
   test('Should return an account on add success', async () => {
@@ -50,7 +50,7 @@ describe('Account Mongo Repository', () => {
 
   test('Should return an account on loadByEmail success', async () => {
     const { sut } = makeSut()
-    await accountCoollection.insertOne(makeFakeAddAccount())
+    await accountCollection.insertOne(makeFakeAddAccount())
 
     const account = await sut.loadByEmail('any_email@email.com')
     expect(account).toBeTruthy()
@@ -68,14 +68,14 @@ describe('Account Mongo Repository', () => {
 
   test('Should update the account accessToken on updateAccessToken success', async () => {
     const { sut } = makeSut()
-    const res = await accountCoollection.insertOne(makeFakeAddAccount())
+    const res = await accountCollection.insertOne(makeFakeAddAccount())
     const account = res.ops[0]
 
     expect(account.accessToken).toBeFalsy()
 
     await sut.updateAccessToken(account._id, 'any_token')
 
-    const updatedAccount = await accountCoollection.findOne({ _id: account._id })
+    const updatedAccount = await accountCollection.findOne({ _id: account._id })
     expect(updatedAccount.accessToken).toBeTruthy()
   })
 })
