@@ -1,10 +1,10 @@
-import { AnswerModel, SurveyModel } from '../models/survey'
+import { SurveyAnswerModel } from '../models/survey'
 
 export interface AddSurveyModel {
   question: string
-  answers: AnswerModel[]
+  answers: SurveyAnswerModel[]
 }
 
 export interface AddSurvey {
-  add (survey: AddSurveyModel): Promise<SurveyModel>
+  add (survey: AddSurveyModel): Promise<void>
 }

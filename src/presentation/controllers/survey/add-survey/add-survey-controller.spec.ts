@@ -1,5 +1,5 @@
 import { AddSurveyController } from './add-survey-controller'
-import { HttpRequest, Validator, AddSurvey, AddSurveyModel, SurveyModel } from './add-survey-controller-protocols'
+import { HttpRequest, Validator, AddSurvey, AddSurveyModel } from './add-survey-controller-protocols'
 import { badRequest, internalServerError } from '../../../helpers/http/http-helpers'
 import { MissingParamError } from '../../../errors'
 
@@ -19,15 +19,6 @@ const makeFakeRequest = (): HttpRequest => ({
   }
 })
 
-const makeFakeSurvey = (): SurveyModel => ({
-  id: 'any_id',
-  question: 'any_question',
-  answers: [
-    { image: 'any_image', answer: 'any_answer' },
-    { image: 'other_image', answer: 'other_answer' }
-  ]
-})
-
 const makeValidatorStub = (): Validator => {
   class ValidatorStub implements Validator {
     async validate (data: any): Promise<Error> {
@@ -39,8 +30,8 @@ const makeValidatorStub = (): Validator => {
 
 const makeAddSurveyStub = (): AddSurvey => {
   class AddSurveyStub implements AddSurvey {
-    async add (survey: AddSurveyModel): Promise<SurveyModel> {
-      return await new Promise(resolve => resolve(makeFakeSurvey()))
+    async add (survey: AddSurveyModel): Promise<void> {
+      return await new Promise(resolve => resolve(null))
     }
   }
   return new AddSurveyStub()
