@@ -1,4 +1,7 @@
 export * from './validator-composite'
 export * from './validator-required-fields'
+export * from './validator-required-subfields'
 export * from './validator-compare-fields'
 export * from './validator-email-field'
+export * from './validator-type-array-field'
+export * from './validator-required-array-fields'
