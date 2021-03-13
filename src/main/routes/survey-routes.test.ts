@@ -19,7 +19,7 @@ describe('Survey Routes', () => {
     await surveyCollection.deleteMany({})
   })
 
-  test('', async () => {
+  test('Should return 403 if user not permission', async () => {
     await request(app)
       .post('/api/add-survey')
       .send({
@@ -30,6 +30,6 @@ describe('Survey Routes', () => {
           { answer: 'Answer 3', image: 'Image 3' }
         ]
       })
-      .expect(204)
+      .expect(403)
   })
 })
