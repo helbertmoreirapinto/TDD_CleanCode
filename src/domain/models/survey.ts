@@ -8,4 +8,5 @@ export interface SurveyAnswerModel{
 export interface SurveyModel extends Model{
   question: string
   answers: SurveyAnswerModel[]
+  date: Date
 }

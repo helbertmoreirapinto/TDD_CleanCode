@@ -1,6 +1,5 @@
 import { SurveyModel, AddSurveyModel, AddSurveyRepository } from './db-add-survey-protocols'
 import { DbAddSurvey } from './db-add-survey'
-
 interface SutTpes{
   sut: DbAddSurvey
   addSurveyRepositoryStub: AddSurveyRepository
@@ -11,7 +10,8 @@ const makeFakeAddSurvey = (): AddSurveyModel => ({
   answers: [
     { answer: 'any_answer', image: 'any_image' },
     { answer: 'other_answer' }
-  ]
+  ],
+  date: new Date()
 })
 
 const makeAddSurveyRepositoryStub = (): AddSurveyRepository => {
