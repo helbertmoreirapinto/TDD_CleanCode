@@ -4,4 +4,5 @@ export interface AccountModel extends Model{
   name: string
   email: string
   password: string
+  accessToken?: string
 }
