@@ -74,14 +74,14 @@ describe('Account Mongo Repository', () => {
 
     test('Should return an account on loadByEmail success', async () => {
       const { sut } = makeSut()
-      await accountCollection.insertOne(makeFakeAddAccount())
+      const res = await accountCollection.insertOne(makeFakeAddAccount())
+      const { _id: id } = res.ops[0]
 
       const account = await sut.loadByEmail('any_email@email.com')
-      expect(account).toBeTruthy()
-      expect(account.id).toBeTruthy()
-      expect(account.name).toBe('any_name')
-      expect(account.email).toBe('any_email@email.com')
-      expect(account.password).toBe('any_password')
+      expect(account).toEqual({
+        id,
+        ...makeFakeAddAccount()
+      })
     })
   })
 
@@ -95,8 +95,11 @@ describe('Account Mongo Repository', () => {
     test('Should return an account on loadByToken success', async () => {
       const accessToken = 'any_token'
       const { sut } = makeSut()
-      const { id } = await sut.add(makeFakeAddAccount())
-      await sut.updateToken(id, accessToken)
+      const res = await accountCollection.insertOne({
+        accessToken,
+        ...makeFakeAddAccount()
+      })
+      const { _id: id } = res.ops[0]
 
       const account = await sut.loadByToken(accessToken)
       expect(account).toEqual({
