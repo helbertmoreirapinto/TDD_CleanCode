@@ -91,5 +91,19 @@ describe('Account Mongo Repository', () => {
       const account = await sut.loadByToken('any_token')
       expect(account).toBeFalsy()
     })
+
+    test('Should return an account on loadByToken success', async () => {
+      const accessToken = 'any_token'
+      const { sut } = makeSut()
+      const { id } = await sut.add(makeFakeAddAccount())
+      await sut.updateToken(id, accessToken)
+
+      const account = await sut.loadByToken(accessToken)
+      expect(account).toEqual({
+        id,
+        accessToken,
+        ...makeFakeAddAccount()
+      })
+    })
   })
 })
