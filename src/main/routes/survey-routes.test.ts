@@ -35,14 +35,14 @@ describe('Survey Routes', () => {
 
   test('Should return 403 on add survey without accesToken header', async () => {
     await request(app)
-      .post('/api/add-survey')
+      .post('/api/surveys')
       .send(makeFakeQuestion())
       .expect(403)
   })
 
   test('Should return 500 on add survey with invalid accesToken header', async () => {
     await request(app)
-      .post('/api/add-survey')
+      .post('/api/surveys')
       .set('x-access-token', 'any_token')
       .send(makeFakeQuestion())
       .expect(500)
@@ -60,7 +60,7 @@ describe('Survey Routes', () => {
     await accountCollection.updateOne({ _id: id }, { $set: { accessToken } })
 
     await request(app)
-      .post('/api/add-survey')
+      .post('/api/surveys')
       .set('x-access-token', accessToken)
       .send(makeFakeQuestion())
       .expect(403)
@@ -79,7 +79,7 @@ describe('Survey Routes', () => {
     await accountCollection.updateOne({ _id: id }, { $set: { accessToken } })
 
     await request(app)
-      .post('/api/add-survey')
+      .post('/api/surveys')
       .set('x-access-token', accessToken)
       .send(makeFakeQuestion())
       .expect(204)
