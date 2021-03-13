@@ -1,6 +1,6 @@
 import { makeSingupValidator } from './singup-validator-factory'
 import { makeDbAuthenticator } from '../../../usecases/authenticator/db-authenticator-factory'
-import { makeDbAddAccount } from '../../../usecases/add-account/db-add-account-factory'
+import { makeDbAddAccount } from '../../../usecases/account/add-account/db-add-account-factory'
 import { makeLogControllerDecorator } from '../../../decorators/log-controller-decorator-factory'
 import { SingUpController } from '../../../../../presentation/controllers/login/singup/singup-controller'
 import { Controller } from '../../../../../presentation/protocols'
